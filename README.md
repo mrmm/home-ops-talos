@@ -1,20 +1,19 @@
 # ⛵ Cluster Template
 
-Welcome to my minimalist template for deploying a single Kubernetes cluster. The goal of this project is to make it easier for people interested in using Kubernetes to deploy a cluster at home on bare-metal or VMs. This template closely mirrors my personal [home-ops](https://github.com/onedr0p/home-ops) repository. At a high level this project makes use of [makejinja](https://github.com/mirkolenz/makejinja) to read in configuration files ([cluster.yaml](./cluster.sample.yaml) & [nodes.yaml](./nodes.sample.yaml)). Makejinja will render out templates that will allow you to install a Kubernetes cluster with the features mentioned below.
+Welcome to my minimalist template for deploying a single Kubernetes cluster. The goal of this project is to make it easier for people interested in using Kubernetes to deploy a cluster at home on bare-metal or VMs. This template closely mirrors my personal [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template) repository. At a high level this project makes use of [makejinja](https://github.com/mirkolenz/makejinja) to read in configuration files ([cluster.yaml](./cluster.sample.yaml) & [nodes.yaml](./nodes.sample.yaml)). Makejinja will render out templates that will allow you to install a Kubernetes cluster with the features mentioned below.
 
 ## ✨ Features
 
-A Kubernetes cluster deployed with [Talos Linux](https://github.com/siderolabs/talos) and an opinionated implementation of [Flux](https://github.com/fluxcd/flux2) using [GitHub](https://github.com/) as the Git provider, [sops](https://github.com/getsops/sops) to manage secrets and [cloudflared](https://github.com/cloudflare/cloudflared) to access applications external to your local network.
+A Kubernetes cluster deployed with [Talos Linux](https://github.com/siderolabs/talos) and an opinionated implementation of [Argo](https://github.com/argoproj/argo-cd) using [GitHub](https://github.com/) as the Git provider, [sops](https://github.com/getsops/sops) to manage secrets and [cloudflared](https://github.com/cloudflare/cloudflared) to access applications external to your local network.
 
 - **Required:** Some knowledge of [Containers](https://opencontainers.org/), [YAML](https://noyaml.com/), [Git](https://git-scm.com/), and a **Cloudflare account** with a **domain**.
-- **Included components:** [flux](https://github.com/fluxcd/flux2), [cilium](https://github.com/cilium/cilium), [cert-manager](https://github.com/cert-manager/cert-manager), [spegel](https://github.com/spegel-org/spegel), [reloader](https://github.com/stakater/Reloader), [ingress-nginx](https://github.com/kubernetes/ingress-nginx/), [external-dns](https://github.com/kubernetes-sigs/external-dns) and [cloudflared](https://github.com/cloudflare/cloudflared).
+- **Included components:** [argo](https://github.com/argoproj/argo-cd), [cilium](https://github.com/cilium/cilium), [cert-manager](https://github.com/cert-manager/cert-manager), [spegel](https://github.com/spegel-org/spegel), [reloader](https://github.com/stakater/Reloader), [ingress-nginx](https://github.com/kubernetes/ingress-nginx/), [external-dns](https://github.com/kubernetes-sigs/external-dns) and [cloudflared](https://github.com/cloudflare/cloudflared).
 
 **Other features include:**
 
 - Dev env managed w/ [mise](https://mise.jdx.dev/)
 - Workflow automation w/ [GitHub Actions](https://github.com/features/actions)
 - Dependency automation w/ [Renovate](https://www.mend.io/renovate)
-- Flux `HelmRelease` and `Kustomization` diffs w/ [flux-local](https://github.com/allenporter/flux-local)
 
 Does this sound cool to you? If so, continue to read on! 👇
 
@@ -53,7 +52,7 @@ There are **5 stages** outlined below for completing this project, make sure you
 
     ```sh
     export REPONAME="home-ops"
-    gh repo create $REPONAME --template onedr0p/cluster-template --disable-wiki --public --clone && cd $REPONAME
+    gh repo create $REPONAME --template ajaykumar4/cluster-template --disable-wiki --public --clone && cd $REPONAME
     ```
 
 2. **Install** and **activate** [mise](https://mise.jdx.dev/) following the instructions for your workstation [here](https://mise.jdx.dev/getting-started.html).
@@ -64,6 +63,7 @@ There are **5 stages** outlined below for completing this project, make sure you
     mise trust
     pip install pipx
     mise install
+    mise run deps
     ```
 
    📍 _**Having trouble installing the tools?** Try unsetting the `GITHUB_TOKEN` env var and then run these commands again_
@@ -117,9 +117,9 @@ There are **5 stages** outlined below for completing this project, make sure you
     ```
 
 > [!TIP]
-> Using a **private repository**? Make sure to paste the public key from `github-deploy.key.pub` into the deploy keys section of your GitHub repository settings. This will make sure Flux has read/write access to your repository.
+> Using a **private repository**? Make sure to paste the public key from `github-deploy.key.pub` into the deploy keys section of your GitHub repository settings. This will make sure Argo has read/write access to your repository.
 
-### Stage 5: Bootstrap Talos, Kubernetes, and Flux
+### Stage 5: Bootstrap Talos, Kubernetes, and Argo
 
 > [!WARNING]
 > It might take a while for the cluster to be setup (10+ minutes is normal). During which time you will see a variety of error messages like: "couldn't get current server API group list," "error: no matching resources found", etc. 'Ready' will remain "False" as no CNI is deployed yet. **This is a normal.** If this step gets interrupted, e.g. by pressing <kbd>Ctrl</kbd> + <kbd>C</kbd>, you likely will need to [reset the cluster](#-reset) before trying again
@@ -138,7 +138,7 @@ There are **5 stages** outlined below for completing this project, make sure you
     git push
     ```
 
-3. Install cilium, coredns, spegel, flux and sync the cluster to the repository state:
+3. Install cilium, coredns, spegel, argo and sync the cluster to the repository state:
 
     ```sh
     task bootstrap:apps
@@ -160,15 +160,15 @@ There are **5 stages** outlined below for completing this project, make sure you
     cilium status
     ```
 
-2. Check the status of Flux and if the Flux resources are up-to-date and in a ready state:
+2. Check the status of Argo and if the Argo resources are up-to-date and in a ready state:
 
-   📍 _Run `task reconcile` to force Flux to sync your Git repository state_
+   📍 _Run `task reconcile` to force Argo to sync your Git repository state_
 
     ```sh
-    flux check
-    flux get sources git flux-system
-    flux get ks -A
-    flux get hr -A
+    argocd login argo.${cloudflare_domain} --username admin --password ${argo_password} --insecure
+    argocd cluster list
+    argocd repo list --output wide
+    argocd app list -A --output wide
     ```
 
 3. Check TCP connectivity to both the ingress controllers:
@@ -194,7 +194,7 @@ There are **5 stages** outlined below for completing this project, make sure you
 > [!TIP]
 > Use the `external` ingress class to make applications public to the internet.
 
-The `external-dns` application created in the `network` namespace will handle creating public DNS records. By default, `echo` and the `flux-webhook` are the only subdomains reachable from the public internet. In order to make additional applications public you must **set the correct ingress class name and ingress annotations** like in the HelmRelease for `echo`.
+The `external-dns` application created in the `network` namespace will handle creating public DNS records. By default, `echo` and the `argo` are the only subdomains reachable from the public internet. In order to make additional applications public you must **set the correct ingress class name and ingress annotations** like in the HelmRelease for `echo`.
 
 ### 🏠 Home DNS
 
@@ -207,20 +207,12 @@ _... Nothing working? That is expected, this is DNS after all!_
 
 ### 🪝 Github Webhook
 
-By default Flux will periodically check your git repository for changes. In-order to have Flux reconcile on `git push` you must configure Github to send `push` events to Flux.
+By default Argo will periodically check your git repository for changes. In-order to have Argo reconcile on `git push` you must configure Github to send `push` events to Argo.
 
-1. Obtain the webhook path:
-
-   📍 _Hook id and path should look like `/hook/12ebd1e363c641dc3c2e430ecf3cee2b3c7a5ac9e1234506f6f5f3ce1230e123`_
-
-    ```sh
-    kubectl -n flux-system get receiver github-webhook --output=jsonpath='{.status.webhookPath}'
-    ```
-
-2. Piece together the full URL with the webhook path appended:
+1. Piece together the full URL with the webhook path appended:
 
     ```text
-    https://flux-webhook.${cloudflare_domain}/hook/12ebd1e363c641dc3c2e430ecf3cee2b3c7a5ac9e1234506f6f5f3ce1230e123
+    https://argo.${cloudflare_domain}/api/webhook
     ```
 
 3. Navigate to the settings of your repository on Github, under "Settings/Webhooks" press the "Add webhook" button. Fill in the webhook URL and your token from `github-push-token.txt`, Content type: `application/json`, Events: Choose Just the push event, and save.
@@ -270,7 +262,7 @@ task talos:upgrade-k8s
 
 ## 🤖 Renovate
 
-[Renovate](https://www.mend.io/renovate) is a tool that automates dependency management. It is designed to scan your repository around the clock and open PRs for out-of-date dependencies it finds. Common dependencies it can discover are Helm charts, container images, GitHub Actions and more! In most cases merging a PR will cause Flux to apply the update to your cluster.
+[Renovate](https://www.mend.io/renovate) is a tool that automates dependency management. It is designed to scan your repository around the clock and open PRs for out-of-date dependencies it finds. Common dependencies it can discover are Helm charts, container images, GitHub Actions and more! In most cases merging a PR will cause Argo to apply the update to your cluster.
 
 To enable Renovate, click the 'Configure' button over at their [Github app page](https://github.com/apps/renovate) and select your repository. Renovate creates a "Dependency Dashboard" as an issue in your repository, giving an overview of the status of all updates. The dashboard has interactive checkboxes that let you do things like advance scheduling or reattempt update PRs you closed without merging.
 
@@ -280,14 +272,13 @@ The base Renovate configuration in your repository can be viewed at [.renovaterc
 
 Below is a general guide on trying to debug an issue with an resource or application. For example, if a workload/resource is not showing up or a pod has started but in a `CrashLoopBackOff` or `Pending` state. These steps do not include a way to fix the problem as the problem could be one of many different things.
 
-1. Check if the Flux resources are up-to-date and in a ready state:
+1. Check if the Argo resources are up-to-date and in a ready state:
 
-   📍 _Run `task reconcile` to force Flux to sync your Git repository state_
+   📍 _Run `task reconcile` to force Argo to sync your Git repository state_
 
     ```sh
-    flux get sources git -A
-    flux get ks -A
-    flux get hr -A
+    argocd repo list --output wide
+    argocd app list -A --output wide
     ```
 
 2. Do you see the pod of the workload you are debugging:
@@ -336,27 +327,8 @@ Once your cluster is fully configured and you no longer need to run `task config
 
 ## 👉 Community Support
 
-- Make a post in this repository's Github [Discussions](https://github.com/onedr0p/cluster-template/discussions).
+- Make a post in this repository's Github [Discussions](https://github.com/ajaykumar4/cluster-template/discussions).
 - Start a thread in the `#support` or `#cluster-template` channels in the [Home Operations](https://discord.gg/home-operations) Discord server.
-
-## 🙋 GitHub Sponsors Support
-
-If you're having difficulty with this project, can't find the answers you need through the community support options above, or simply want to show your appreciation while gaining deeper insights, I’m offering one-on-one paid support through GitHub Sponsors for a limited time. Payment and scheduling will be coordinated through [GitHub Sponsors](https://github.com/sponsors/onedr0p).
-
-<details>
-
-<summary>Click to expand the details</summary>
-
-<br>
-
-- **Rate**: $50/hour (no longer than 2 hours / day).
-- **What’s Included**: Assistance with deployment, debugging, or answering questions related to this project.
-- **What to Expect**:
-  1. Sessions will focus on specific questions or issues you are facing.
-  2. I will provide guidance, explanations, and actionable steps to help resolve your concerns.
-  3. Support is limited to this project and does not extend to unrelated tools or custom feature development.
-
-</details>
 
 ## ❔ What's next
 
@@ -373,13 +345,13 @@ or [synology-csi](https://github.com/SynologyOpenSource/synology-csi).
 
 ### Community Repositories
 
-Community member [@whazor](https://github.com/whazor) created [Kubesearch](https://kubesearch.dev) to allow searching Flux HelmReleases across Github and Gitlab repositories with the `kubesearch` topic.
+Community member [@whazor](https://github.com/whazor) created [Kubesearch](https://kubesearch.dev) to allow searching Argo Helm Releases across Github and Gitlab repositories with the `kubesearch` topic.
 
 ## 🙌 Related Projects
 
 If this repo is too hot to handle or too cold to hold check out these following projects.
 
-- [ajaykumar4/cluster-template](https://github.com/ajaykumar4/cluster-template) - _A template for deploying a Talos Kubernetes cluster including Argo for GitOps_
+- [onedr0p/cluster-template](https://github.com/onedr0p/cluster-template) - _A template for deploying a Talos Kubernetes cluster including Flux for GitOps_
 - [khuedoan/homelab](https://github.com/khuedoan/homelab) - _Fully automated homelab from empty disk to running services with a single command._
 - [mitchross/k3s-argocd-starter](https://github.com/mitchross/k3s-argocd-starter) - starter kit for k3s, argocd
 - [ricsanfre/pi-cluster](https://github.com/ricsanfre/pi-cluster) - _Pi Kubernetes Cluster. Homelab kubernetes cluster automated with Ansible and FluxCD_
@@ -389,11 +361,11 @@ If this repo is too hot to handle or too cold to hold check out these following 
 
 <div align="center">
 
-<a href="https://star-history.com/#onedr0p/cluster-template&Date">
+<a href="https://star-history.com/#ajaykumar4/cluster-template&Date">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=onedr0p/cluster-template&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=onedr0p/cluster-template&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=onedr0p/cluster-template&type=Date" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=ajaykumar4/cluster-template&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=ajaykumar4/cluster-template&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=ajaykumar4/cluster-template&type=Date" />
   </picture>
 </a>
 
@@ -401,4 +373,4 @@ If this repo is too hot to handle or too cold to hold check out these following 
 
 ## 🤝 Thanks
 
-Big shout out to all the contributors, sponsors and everyone else who has helped on this project.
+Big shout out to [onedr0p](https://github.com/onedr0p)

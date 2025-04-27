@@ -17,7 +17,7 @@ configs:
         clusters:
           - "*"
   secret:
-    argocdServerAdminPassword: $2a$10$mEtMNc76LzDt3KUF61fqkON0JiXdPOjOH9ijEo4.53Jr8g8gh93Pa
+    argocdServerAdminPassword: $2a$10$00MADC3J6OpoFv3W2s8jk.7xpytafbPSDb3RMluPimv9HTxorC1JO
     argocdServerAdminPasswordMtime: 2025-04-27T23:01:51
     githubSecret: ed936c5b79c520220cb735e3af38adb7
 controller:

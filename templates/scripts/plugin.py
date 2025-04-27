@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Any
+from datetime import datetime
 
 import base64
 import ipaddress
@@ -120,6 +121,11 @@ def talos_patches(value: str) -> list[str]:
     return [str(f) for f in sorted(path.glob('*.yaml.j2')) if f.is_file()]
 
 
+# Return current datetime
+def current_datetime() -> str:
+    return datetime.now().strftime('%Y-%m-%dT%H:%M:%S%Z')
+
+
 class Plugin(makejinja.plugin.Plugin):
     def __init__(self, data: dict[str, Any]):
         self._data = data
@@ -164,5 +170,6 @@ class Plugin(makejinja.plugin.Plugin):
             cloudflare_tunnel_secret,
             github_deploy_key,
             github_push_token,
-            talos_patches
+            talos_patches,
+            current_datetime
         ]

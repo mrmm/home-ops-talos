@@ -21,8 +21,7 @@ cniConfig:
 nodes:
   - hostname: "lenovo-server"
     ipAddress: "192.168.69.200"
-    installDiskSelector:
-      serial: "sda"
+    installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
     talosImageURL: factory.talos.dev/installer/cc537eec43c6c2bc840e1fcb788d6604cea5d8243e51a6e65bea16cfdfc214ca

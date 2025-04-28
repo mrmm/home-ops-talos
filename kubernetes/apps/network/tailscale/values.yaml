@@ -11,11 +11,11 @@ controllers:
           TS_HOSTNAME: homelab-router
           TS_USERSPACE: false
           TS_KUBE_SECRET: tailscale
-          TS_ROUTES: 192.168.69.224/27
+          TS_ROUTES: 192.168.69.0/24
           TS_AUTHKEY:
             valueFrom:
               secretKeyRef:
-                name: tailscale-auth
+                name: tailscale-secret
                 key: TS_AUTHKEY
         securityContext:
           capabilities:

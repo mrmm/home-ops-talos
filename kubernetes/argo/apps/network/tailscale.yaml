@@ -17,7 +17,7 @@ spec:
       chart: app-template
       targetRevision: 3.1.0
       helm:
-        releaseName: cloudflared
+        releaseName: tailscale
         valueFiles:
           - $repo/kubernetes/apps/network/tailscale/values.yaml
   destination:

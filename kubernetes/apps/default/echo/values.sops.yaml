@@ -69,9 +69,9 @@ serviceMonitor:
         scrapeTimeout: 10s
 ingress:
   app:
-    className: external
+    className: internal
     annotations:
-      external-dns.alpha.kubernetes.io/target: external.mrmm.xyz
+      external-dns.alpha.kubernetes.io/target: internal.mrmm.xyz
     hosts:
       - host: '{{ .Release.Name }}.mrmm.xyz'
         paths:

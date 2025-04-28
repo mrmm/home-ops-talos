@@ -1,0 +1,36 @@
+# https://github.com/tailscale/tailscale/blob/main/docs/k8s/rolebinding.yaml
+# Copyright (c) Tailscale Inc & AUTHORS
+# SPDX-License-Identifier: BSD-3-Clause
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: tailscale
+  namespace: network
+subjects:
+  - kind: ServiceAccount
+    name: tailscale
+roleRef:
+  kind: Role
+  name: tailscale
+  apiGroup: rbac.authorization.k8s.io
+sops:
+  kms: []
+  gcp_kms: []
+  azure_kv: []
+  hc_vault: []
+  age:
+    - recipient: age1wly55uepmquugkkd3jfev7tjhf46da63rrn4jw7d8l70kur5334s723lmp
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSAvZlF5VTRKS3FHVDNHYVdl
+        SVhMeGcrTkVFMlNFL095THFBKzAvU2pZRlJFCm1nVzU3bjNvdlY0RGJ2cVVoTzVU
+        QURtQ0NJRDd2Mk5FblFuZWF1NXpIU00KLS0tIDFjeXllRGN4OCthY2pxd2k0K3FZ
+        VXZ5WVpKR1o1QzZFVnkwdWFWaXUzZncKUL4LA5DNyaiyipTBIYpUjyT8mFIsxiRz
+        gp+T01dltfFCe50AT0IABl7sHiCwa9IXdKsAv0RBwlB+vw+0TCmLug==
+        -----END AGE ENCRYPTED FILE-----
+  lastmodified: "2025-04-28T20:56:58Z"
+  mac: ENC[AES256_GCM,data:MFpiu50f+Q1BqQR3RK9Tdb3DJEUD3z7KwSTQxJIgrWLN+8bekSyjzhI7ivCVtBvkOZ6dpDuLgt55USLFJQ658roH8ggwgaEPUoB2jgvIAAQYO33JwUFArwVBi4KL2qPnriLcgMBdnfimLGGiUbC86Iie3aFRymKihSV8rt1mPx0=,iv:x5rZUzSjCPixGW5wprvCuqxZoiJap37DtrNFMZmZeEE=,tag:VaDCBiMhOTsOsHqPamyupQ==,type:str]
+  pgp: []
+  encrypted_regex: ^(data|stringData)$
+  mac_only_encrypted: true
+  version: 3.9.4

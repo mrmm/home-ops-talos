@@ -20,7 +20,7 @@ envoy:
 dashboards:
   enabled: true
 hubble:
-  enabled: false
+  enabled: true
   relay:
     enabled: true
   ui:

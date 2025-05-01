@@ -69,7 +69,7 @@ serviceMonitor:
         scrapeTimeout: 10s
 ingress:
   app:
-    className: internal
+    className: external
     annotations:
       external-dns.alpha.kubernetes.io/target: external.mrmm.xyz
     hosts:

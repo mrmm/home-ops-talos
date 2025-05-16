@@ -1,0 +1,14 @@
+---
+nodes:
+%{ for node_name, config in nodes ~}
+  - name: "${node_name}"
+    address: "${config.ip}"
+    controller: ${config.controller}
+    disk: "/dev/sda"
+    mac_addr: ${config.mac_address}
+    schematic_id: ${schematic_id}
+    mtu: 1500
+    secureboot: false
+    encrypt_disk: false
+%{ endfor ~}
+

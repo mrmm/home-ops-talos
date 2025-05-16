@@ -21,10 +21,6 @@ dashboards:
   enabled: true
 hubble:
   enabled: false
-  relay:
-    enabled: false
-  ui:
-    enabled: false
 ipam:
   mode: kubernetes
 ipv4NativeRoutingCIDR: "10.42.0.0/16"

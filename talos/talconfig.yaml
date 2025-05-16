@@ -5,10 +5,10 @@ clusterName: kubernetes
 talosVersion: "${talosVersion}"
 kubernetesVersion: "${kubernetesVersion}"
 
-endpoint: https://192.168.69.50:6443
+endpoint: https://192.168.1.50:6443
 additionalApiServerCertSans: &sans
   - "127.0.0.1"
-  - "192.168.69.50"
+  - "192.168.1.50"
 additionalMachineCertSans: *sans
 
 clusterPodNets: ["10.42.0.0/16"]
@@ -19,25 +19,114 @@ cniConfig:
   name: none
 
 nodes:
-  - hostname: "lenovo-server"
-    ipAddress: "192.168.69.200"
+  - hostname: "ctrl-01"
+    ipAddress: "192.168.1.60"
     installDisk: "/dev/sda"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/cc537eec43c6c2bc840e1fcb788d6604cea5d8243e51a6e65bea16cfdfc214ca
+    talosImageURL: factory.talos.dev/installer/53513e54bb39202f35694412577a6bc53d484744d35a126e5d42ef34785c0d83
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "28:d2:44:5d:50:81"
+          hardwareAddr: "bc:24:11:e6:ba:07"
         dhcp: false
         addresses:
-          - "192.168.69.200/24"
+          - "192.168.1.60/24"
         routes:
           - network: "0.0.0.0/0"
-            gateway: "192.168.69.1"
+            gateway: "192.168.1.1"
         mtu: 1500
         vip:
-          ip: "192.168.69.50"
+          ip: "192.168.1.50"
+  - hostname: "ctrl-02"
+    ipAddress: "192.168.1.61"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/53513e54bb39202f35694412577a6bc53d484744d35a126e5d42ef34785c0d83
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:44:94:5c"
+        dhcp: false
+        addresses:
+          - "192.168.1.61/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "192.168.1.1"
+        mtu: 1500
+        vip:
+          ip: "192.168.1.50"
+  - hostname: "ctrl-03"
+    ipAddress: "192.168.1.62"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/53513e54bb39202f35694412577a6bc53d484744d35a126e5d42ef34785c0d83
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:1e:1d:2f"
+        dhcp: false
+        addresses:
+          - "192.168.1.62/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "192.168.1.1"
+        mtu: 1500
+        vip:
+          ip: "192.168.1.50"
+  - hostname: "work-01"
+    ipAddress: "192.168.1.71"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/53513e54bb39202f35694412577a6bc53d484744d35a126e5d42ef34785c0d83
+    controlPlane: false
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:64:5b:cb"
+        dhcp: false
+        addresses:
+          - "192.168.1.71/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "192.168.1.1"
+        mtu: 1500
+  - hostname: "work-02"
+    ipAddress: "192.168.1.72"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/53513e54bb39202f35694412577a6bc53d484744d35a126e5d42ef34785c0d83
+    controlPlane: false
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:c9:22:c3"
+        dhcp: false
+        addresses:
+          - "192.168.1.72/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "192.168.1.1"
+        mtu: 1500
+  - hostname: "work-03"
+    ipAddress: "192.168.1.73"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/53513e54bb39202f35694412577a6bc53d484744d35a126e5d42ef34785c0d83
+    controlPlane: false
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:6f:20:03"
+        dhcp: false
+        addresses:
+          - "192.168.1.73/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "192.168.1.1"
+        mtu: 1500
 
 # Global patches
 patches:

@@ -5,7 +5,7 @@ service:
   type: LoadBalancer
   port: 53
   annotations:
-    io.cilium/lb-ipam-ips: 192.168.69.51
+    io.cilium/lb-ipam-ips: 192.168.1.51
   externalTrafficPolicy: Cluster
 watchedResources:
   - Ingress
@@ -19,14 +19,14 @@ sops:
     - recipient: age1wly55uepmquugkkd3jfev7tjhf46da63rrn4jw7d8l70kur5334s723lmp
       enc: |
         -----BEGIN AGE ENCRYPTED FILE-----
-        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBUTThqUGMwRmIwOXhsUXRn
-        ZDBFazVNSXp0V2YwYytpRjhDOWtIQllRMUVJClg4eEtKNkkyamFLWEpuc0dEVHpO
-        eHplcDRLeUtQVWVRdEJiSmV4Snd6TzQKLS0tIG0rRmVQbVVTMEdubi9GaGo0WXVm
-        a1FIU2JuSkdLOER4Uk8rUm9HSDR2RGMKx8Pxi8A3rxfSlfGtakk4orJvbBZacZiL
-        nHhPxwASSvxxE15nuvCn09v8+DoakxVKVUbm57DnCzapSFPeEbP3UQ==
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBsSDN0V09KZzFtSUdlVnE2
+        NzgyMnFUaUZPeWkySTd4UUlFNG5QZW05UDBzCnpwVVZZMUR4eWJyYTArdkp0Z1d3
+        dDVmV3Q5MHJiY0xVeXBqcStZYmJZdTAKLS0tIGdxYUU3bnR6ZjQ2OXpSb2diQytQ
+        V3R1OTZPdDB4a01vVDAzSysvV2IzTVUKUc7yw7841+tgdxzhJLTvFYE5LbSA2HK+
+        gCiG63rh1XgNIERwXkHx3i9cFBvOq+4vxdlGjQso6gqxtW2Klq3EZQ==
         -----END AGE ENCRYPTED FILE-----
-  lastmodified: "2025-04-27T21:01:52Z"
-  mac: ENC[AES256_GCM,data:Z/UmM9eCPTqQu9z4+zQMkGoBjFJMnL1X+3T+0woGkTHCFZiPO2ZzhbsNTdQZH3XztM9qMtG5sYkE076TpchGxc3LgX5SJEtXuUklHv8gS0x1+/b91eU62xgfYJK8V/5shIOn3uXd9UwJy6X1AGBbzyqBEAnaci2SG3R5BdTw7FU=,iv:wzjNGUyWRJWaPcNQRSUAmUJ7fSy2j1BSIpZpsyGaEtU=,tag:D6AD1afRfEb48Hv00J9g4Q==,type:str]
+  lastmodified: "2025-05-16T20:42:12Z"
+  mac: ENC[AES256_GCM,data:4VMEb9E+xd0Y9YffxU5KPC2hc/AIUTIIaP+uKKBz4lzgjxAE03tZ+HowaTbBvtjq8gpoanfFz69roApKRwszt8kkX5INlPapBPZZa7h4qsXoYAa5rTGQ35TNzKQTgYLP3pyqJqJ7IU2VmkKLh+N6BSkkMEyb1EI4Ax4DullarNg=,iv:ZlO72hBMRLCfGfLyzPVexzuTAxdM0E000W7AmcM8xgg=,tag:jH7xtKVWMC/3xTFUs/9FMg==,type:str]
   pgp: []
   encrypted_regex: ^(data|stringData)$
   mac_only_encrypted: true

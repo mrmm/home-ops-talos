@@ -30,9 +30,13 @@ spec:
   templatePatch: |
     spec:
       sources:
+        - repoURL: "https://github.com/mrmm/home-ops-talos.git"
+          path: "{{ .path.path }}"
+          targetRevision: main
+          ref: repo
         {{ if eq .kustomize true }}
         - repoURL: "https://github.com/mrmm/home-ops-talos.git"
-          path: kubernetes/apps/network/external-dns
+          path: "{{ .path.path }}"
           targetRevision: main
           ref: repo
         {{ end }}

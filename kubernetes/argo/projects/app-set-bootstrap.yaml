@@ -54,7 +54,7 @@ spec:
           helm:
             releaseName: "{{ index $.path.segments 3 }}"
             # Compute valuesFiles: use provided list or default to ["values.yaml"]
-            {{- $vals := or .valuesFiles (slice "values.yaml") }}
+            {{- $vals := or .valuesFiles (list "values.yaml") }}
             {{- if gt (len $vals) 0 }}
             valueFiles:
               {{- range $vals }}

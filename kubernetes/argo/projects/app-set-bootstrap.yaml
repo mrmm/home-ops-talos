@@ -29,22 +29,28 @@ spec:
         - ServerSideApply=true
   templatePatch: |
     spec:
+      syncPolicy:
+        automated:
+          allowEmpty: {{ or .config.allowEmpty true }}
+          prune: {{ or .config.prune true }}
+          selfHeal: {{ or .config.selfHeal true }}
+        syncOptions:
+        - CreateNamespace=true
+        - ServerSideApply=true
       sources:
         - repoURL: "https://github.com/mrmm/home-ops-talos.git"
           targetRevision: main
           ref: repo
-        {{ if eq .kustomize true }}
         - repoURL: "https://github.com/mrmm/home-ops-talos.git"
           path: "{{ .path.path }}"
           targetRevision: main
-        {{ end }}
-        {{ if eq .helm true }}
         - repoURL: "https://github.com/mrmm/home-ops-talos.git"
           targetRevision: main
           path: "{{ .path.path }}"
           helm:
             releaseName: "{{ index .path.segments 3 }}"
             valueFiles:
-              - $repo/{{ .path.path }}/values{{ if eq .valuesSops true }}.sops{{ end }}.yaml
-        {{ end }}
+              {{ rang .valuesFiles }}
+              - $repo/{{ .path.path }}/{{ . }}
+              {{ end }}
 ---

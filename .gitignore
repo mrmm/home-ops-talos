@@ -20,4 +20,5 @@ talosconfig
 .DS_Store
 Thumbs.db
 .terraform
-
+terraform.tfvars
+terraform.tfstate

@@ -20,7 +20,7 @@ controllers:
         envFrom:
           - secretRef:
               name: cloudflared-secret
-        args: ["tunnel", "run"]
+        args: ["tunnel", "run", "homelab-kubernetes"]
         probes:
           liveness: &probes
             enabled: true

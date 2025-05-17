@@ -37,6 +37,6 @@ run = [
 "asdf:janpieper/asdf-ksops" = "4.3.3"
 age-plugin-yubikey = "latest"
 opentofu = "1.9.1"
-talosctl = "1.10.1"
+talosctl = "1.10.2"
 kubectl = "1.33.1"
 talhelper = "3.0.24"

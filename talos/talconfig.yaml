@@ -34,7 +34,7 @@ nodes:
           - "192.168.1.60/24"
         routes:
           - network: "0.0.0.0/0"
-            gateway: "192.168.1.1"
+            gateway: "192.168.1.254"
         mtu: 1500
         vip:
           ip: "192.168.1.50"
@@ -53,7 +53,7 @@ nodes:
           - "192.168.1.61/24"
         routes:
           - network: "0.0.0.0/0"
-            gateway: "192.168.1.1"
+            gateway: "192.168.1.254"
         mtu: 1500
         vip:
           ip: "192.168.1.50"
@@ -72,7 +72,7 @@ nodes:
           - "192.168.1.62/24"
         routes:
           - network: "0.0.0.0/0"
-            gateway: "192.168.1.1"
+            gateway: "192.168.1.254"
         mtu: 1500
         vip:
           ip: "192.168.1.50"
@@ -91,8 +91,19 @@ nodes:
           - "192.168.1.71/24"
         routes:
           - network: "0.0.0.0/0"
-            gateway: "192.168.1.1"
+            gateway: "192.168.1.254"
         mtu: 1500
+    userVolumes:
+      - name: longhorn
+        provisioning:
+          diskSelector:
+            match: disk.size >= 140u * GB
+          grow: true
+          minSize: "50GiB"
+          maxSize: "150GiB"
+        filesystem:
+          type: xfs
+
   - hostname: "work-02"
     ipAddress: "192.168.1.72"
     installDisk: "/dev/sda"
@@ -108,8 +119,19 @@ nodes:
           - "192.168.1.72/24"
         routes:
           - network: "0.0.0.0/0"
-            gateway: "192.168.1.1"
+            gateway: "192.168.1.254"
         mtu: 1500
+    userVolumes:
+      - name: longhorn
+        provisioning:
+          diskSelector:
+            match: disk.size >= 140u * GB
+          grow: true
+          minSize: "50GiB"
+          maxSize: "150GiB"
+        filesystem:
+          type: xfs
+
   - hostname: "work-03"
     ipAddress: "192.168.1.73"
     installDisk: "/dev/sda"
@@ -125,8 +147,18 @@ nodes:
           - "192.168.1.73/24"
         routes:
           - network: "0.0.0.0/0"
-            gateway: "192.168.1.1"
+            gateway: "192.168.1.254"
         mtu: 1500
+    userVolumes:
+      - name: longhorn
+        provisioning:
+          diskSelector:
+            match: disk.size >= 140u * GB
+          grow: true
+          minSize: "50GiB"
+          maxSize: "150GiB"
+        filesystem:
+          type: xfs
 
 # Global patches
 patches:
@@ -142,3 +174,8 @@ controlPlane:
     - "@./patches/controller/admission-controller-patch.yaml"
     - "@./patches/controller/cluster.yaml"
 
+# Workers patches
+worker:
+  patches:
+    # - "@./patches/worker/machine-longhotn-disk.yaml"
+    - "@./patches/worker/machine-kubelet.yaml"

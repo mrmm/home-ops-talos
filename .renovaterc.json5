@@ -172,5 +172,21 @@
       ],
       datasourceTemplate: "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
     },
+    {
+      description: "Process chart versions in config.json",
+      fileMatch: [
+        "/(^|/)kubernetes\/.+\/config\.json$/",
+        "/(^|/)kubernetes\/.+\/config\.ya?ml$/"
+      ],
+      customType: "regex",
+      matchStrings: [
+        // capture chart name and its current version
+        "\"chart\":\\s*\"(?<depName>[^\\\"]+)\"[\\s\\S]*?\"targetRevision\":\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      datasourceTemplate: "helm",                          // use Helm index,
+      depNameTemplate: "{{{depName}}}",
+      extractVersionTemplate: "{{{currentValue}}}",
+      versioningTemplate: "semver",
+    }
   ],
 }

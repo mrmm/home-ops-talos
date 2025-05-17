@@ -20,14 +20,14 @@ spec:
       destination:
         name: "in-cluster"
         namespace: "{{ index .path.segments 2 }}"
-  syncPolicy:
-    automated:
-      allowEmpty: true
-      prune: true
-      selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
-    - ServerSideApply=true
+    syncPolicy:
+      automated:
+        allowEmpty: true
+        prune: true
+        selfHeal: true
+      syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
   templatePatch: |
     spec:
       sources:

@@ -1,0 +1,104 @@
+---
+app-template:
+  controllers:
+    echo:
+      strategy: RollingUpdate
+      containers:
+        app:
+          image:
+            repository: ghcr.io/mendhak/http-https-echo
+            tag: 34
+          env:
+            HTTP_PORT: 8080
+            LOG_WITHOUT_NEWLINE: true
+            LOG_IGNORE_PATH: /healthz
+            PROMETHEUS_ENABLED: true
+          probes:
+            liveness:
+              enabled: true
+              custom: true
+              spec:
+                httpGet:
+                  path: /healthz
+                  port: 8080
+                initialDelaySeconds: 0
+                periodSeconds: 10
+                timeoutSeconds: 1
+                failureThreshold: 3
+            readiness:
+              enabled: true
+              custom: true
+              spec:
+                httpGet:
+                  path: /healthz
+                  port: 8080
+                initialDelaySeconds: 0
+                periodSeconds: 10
+                timeoutSeconds: 1
+                failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 10m
+            limits:
+              memory: 64Mi
+  defaultPodOptions:
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 65534
+      runAsGroup: 65534
+      seccompProfile:
+        type: RuntimeDefault
+  service:
+    app:
+      controller: echo
+      ports:
+        http:
+          port: 8080
+  serviceMonitor:
+    app:
+      serviceName: echo
+      endpoints:
+        - port: http
+          scheme: http
+          path: /metrics
+          interval: 1m
+          scrapeTimeout: 10s
+  ingress:
+    app:
+      className: external
+      annotations:
+        external-dns.alpha.kubernetes.io/target: external.mrmm.xyz
+      hosts:
+        - host: '{{ .Release.Name }}.mrmm.xyz'
+          paths:
+            - path: /
+              service:
+                identifier: app
+                port: http
+sops:
+  kms: []
+  gcp_kms: []
+  azure_kv: []
+  hc_vault: []
+  age:
+    - recipient: age1wly55uepmquugkkd3jfev7tjhf46da63rrn4jw7d8l70kur5334s723lmp
+      enc: |
+        -----BEGIN AGE ENCRYPTED FILE-----
+        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBJeHBmTHFvSDlLNk1XU3p4
+        M3BYMWp6YUdEUzBOSzNmaXZnVHlYeEttV0RVClE2K3pLMUk5TU43anBhOHpXTWxu
+        MFFNRU1zSDNnaml3U3ZVQ2lOVEhUVUkKLS0tIGtucHBtOFlNaGJ2U0FIamY1OE01
+        M1FkRCsyVytISU9RSklOTVNyMVZESVEKXGwKlfm0YMIVQvJH24qDm6skXgneGqwu
+        lYaiTsKKd61q5KPe4dmeW1JvJpYOiOqPdUM9AllHhAXY8OOWE2Alug==
+        -----END AGE ENCRYPTED FILE-----
+  lastmodified: "2025-05-16T20:42:12Z"
+  mac: ENC[AES256_GCM,data:TS37EcJQi4abVkdaW1tm/spIbjUy4DSgWSyJjKThU62rYu6uAcNCNdQHtWJhgt1GpLgSbaFT1X1fNUIlJe2zIsKsWgk8RAn6rml538XTG9at6s2JKCKfXEPINDpbzhqYZwwOrjWKBm0/BfLseyMsKiVWTfl1AOb2+BGgc18pWdE=,iv:IK73UndWOiIH7jgheSqnvRY29+r/eUMooIEjAJsDKuA=,tag:o0svqYkDMfoVsjgU/0rrDg==,type:str]
+  pgp: []
+  encrypted_regex: ^(data|stringData)$
+  mac_only_encrypted: true
+  version: 3.9.4

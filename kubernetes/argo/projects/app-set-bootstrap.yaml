@@ -12,8 +12,9 @@ spec:
         files:
           - path: "kubernetes/apps/**/config.yaml"
   template:
-    annotations:
-      argocd.argoproj.io/sync-wave: "{{ or .config.syncWave 999 }}"
+    metadata:
+      annotations:
+        argocd.argoproj.io/sync-wave: "{{ or .config.syncWave 999 }}"
 
     metadata:
       name: "{{ index .path.segments 2 }}-{{ index .path.segments 3 }}"

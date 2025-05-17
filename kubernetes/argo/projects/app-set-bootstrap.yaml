@@ -13,7 +13,7 @@ spec:
           - path: "kubernetes/apps/**/config.json"
   template:
     metadata:
-      name: "{{ index .path.segments 3 }}"
+      name: "{{ index .path.segments 2 }}-{{ index .path.segments 3 }}"
     spec:
       project: "kubernetes"
       destination:

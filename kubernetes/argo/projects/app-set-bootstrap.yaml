@@ -54,5 +54,5 @@ spec:
             {{- range . }}
               - $repo/{{ $.path.path }}/{{ . }}
             {{- end }}
-            {{- end }
+            {{- end }}
 ---

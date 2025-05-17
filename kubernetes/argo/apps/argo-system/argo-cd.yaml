@@ -16,7 +16,7 @@ spec:
       targetRevision: main
       ref: repo
     - repoURL: "https://github.com/mrmm/home-ops-talos.git"
-      path: kubernetes/apps/argo-system/argo-cd/manifests
+      path: kubernetes/apps/argo-system/manifests
       targetRevision: main
       ref: repo
     - repoURL: ghcr.io/argoproj/argo-helm

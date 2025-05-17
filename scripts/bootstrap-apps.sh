@@ -130,7 +130,7 @@ function apply_argo_bootstrapping() {
     local -r bootstrappingmaps=(
         "${ROOT_DIR}/kubernetes/components/common/apps.yaml"
         "${ROOT_DIR}/kubernetes/components/common/repositories.yaml"
-        "${ROOT_DIR}/kubernetes/components/common/settings.yaml"
+        "${ROOT_DIR}/kubernetes/components/common/projects.yaml"
     )
 
     for bootstrappingmap in "${bootstrappingmaps[@]}"; do

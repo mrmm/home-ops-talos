@@ -8,7 +8,7 @@ spec:
   project: default
   source:
     repoURL: "https://github.com/mrmm/home-ops-talos.git"
-    path: kubernetes/argo/settings
+    path: kubernetes/argo/projects
     targetRevision: main
   destination:
     name: in-cluster

@@ -21,4 +21,5 @@ talosconfig
 Thumbs.db
 .terraform
 terraform.tfvars
-*terraform.tfstate*
+**/*.tfstate.backup
+**/*.tfstate

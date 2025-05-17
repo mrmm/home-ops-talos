@@ -1,7 +1,9 @@
 {
-  "valuesFiles": [
-    "values.yaml"
-  ],
+  "helm": {
+    "valuesFiles": [
+      "values.yaml"
+    ],
+  },
   "config":{
     "prune": true,
     "selfHeal": true

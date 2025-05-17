@@ -10,7 +10,7 @@ spec:
         repoURL: "https://github.com/mrmm/home-ops-talos.git"
         revision: main
         files:
-          - path: "kubernetes/apps/**/config.json"
+          - path: "kubernetes/apps/**/config.yaml"
   template:
     metadata:
       name: "{{ index .path.segments 2 }}-{{ index .path.segments 3 }}"

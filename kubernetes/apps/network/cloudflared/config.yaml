@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mrmm/home-ops-talos/refs/heads/main/kubernetes/argo/config/config.schema.json
+helm:
+  charts:
+    - repoURL: https://bjw-s-labs.github.io/helm-charts
+      chart: app-template
+      targetRevision: 3.7.3
+      valuesFiles:
+      - values.yaml
+config:
+  prune: true
+  selfHeal: true
+  allowEmpty: true

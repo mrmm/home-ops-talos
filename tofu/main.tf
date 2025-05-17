@@ -73,7 +73,7 @@ module "talos" {
       disks = {
         longhorn = {
           device     = "/dev/sdb"
-          size       = "180G"
+          size       = "150G"
           type       = "scsi"
           mountpoint = "/var/lib/longhorn"
         }
@@ -91,7 +91,7 @@ module "talos" {
       disks = {
         longhorn = {
           device     = "/dev/sdb"
-          size       = "180G"
+          size       = "150G"
           type       = "scsi"
           mountpoint = "/var/lib/longhorn"
         }
@@ -109,7 +109,7 @@ module "talos" {
       disks = {
         longhorn = {
           device     = "/dev/sdb"
-          size       = "180G"
+          size       = "150G"
           type       = "scsi"
           mountpoint = "/var/lib/longhorn"
         }

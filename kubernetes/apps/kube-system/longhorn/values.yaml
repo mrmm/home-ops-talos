@@ -1,0 +1,129 @@
+csi:
+  attacherReplicaCount: 3
+  provisionerReplicaCount: 3
+  resizerReplicaCount: 3
+  snapshotterReplicaCount: 3
+  kubeletRootDir: /var/lib/kubelet
+  plugin:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+  provisioner:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+  attacher:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+  resizer:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+  snapshotter:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+defaultSettings:
+  createDefaultDiskLabeledNodes: true
+  defaultReplicaCount: 3
+  guaranteedEngineManagerCPU: 0.2
+  guaranteedReplicaManagerCPU: 0.2
+  storageOverProvisioningPercentage: 200
+  storageMinimalAvailablePercentage: 10
+  taintToleration: 'true'
+  defaultDataPath: /var/lib/longhorn/
+  autoDeletePodWhenVolumeDetachedUnexpectedly: true
+  autoSalvage: true
+  replicaZoneSoftAntiAffinity: false
+  concurrentReplicaRebuildPerNodeLimit: 2
+  backupstorePollInterval: 300
+  replicaSoftAntiAffinity: false
+persistence:
+  defaultClass: true
+  defaultClassReplicaCount: 3
+  reclaimPolicy: Delete
+  defaultFsType: ext4
+  defaultDataLocality: disabled  # Determines how data is stored locally. 'strict-local' is no longer applicable.
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+
+
+service:
+  ui:
+    type: ClusterIP
+
+longhornManager:
+  priorityClass: system-cluster-critical
+
+longhornDriver:
+  priorityClass: system-cluster-critical
+
+preUpgradeChecker:
+  jobEnabled: false
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    additionalLabels: {}
+    annotations: {}
+    interval: "30s" # Default scrape interval. Override if needed.
+    scrapeTimeout: "10s" # Default scrape timeout for Prometheus metrics
+    relabelings: []
+    metricRelabelings: []
+
+# ---
+# PodSecurityContext/PodSecurity Admission Compliance
+# The Longhorn Helm chart does not expose direct securityContext fields for DaemonSet/Jobs.
+# To enforce PodSecurity restricted baseline, use a Helm post-render patch or Kustomize overlay.
+# Example Kustomize patch (apply in overlays/longhorn):
+#
+# apiVersion: apps/v1
+# kind: DaemonSet
+# metadata:
+#   name: longhorn-manager
+#   namespace: longhorn-system
+# spec:
+#   template:
+#     spec:
+#       containers:
+#         - name: longhorn-manager
+#           securityContext:
+#             runAsNonRoot: true
+#             allowPrivilegeEscalation: false
+#             seccompProfile:
+#               type: RuntimeDefault
+#             capabilities:
+#               drop: ["ALL"]
+#
+# Repeat for any Job templates as needed.
+#
+# This is a best-practice deviation due to Helm chart limitations. Track for future chart updates.

@@ -1,0 +1,11 @@
+{
+  "helm": {
+    "valuesFiles": [
+      "values.yaml"
+    ],
+  },
+  "config":{
+    "prune": true,
+    "selfHeal": true
+  }
+}

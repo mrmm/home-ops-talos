@@ -31,14 +31,12 @@ spec:
     spec:
       sources:
         - repoURL: "https://github.com/mrmm/home-ops-talos.git"
-          path: "{{ .path.path }}"
           targetRevision: main
           ref: repo
         {{ if eq .kustomize true }}
         - repoURL: "https://github.com/mrmm/home-ops-talos.git"
           path: "{{ .path.path }}"
           targetRevision: main
-          ref: repo
         {{ end }}
         {{ if eq .helm true }}
         - repoURL: "https://github.com/mrmm/home-ops-talos.git"

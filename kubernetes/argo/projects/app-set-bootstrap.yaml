@@ -32,27 +32,34 @@ spec:
       syncPolicy:
         automated:
           allowEmpty: {{ or .config.allowEmpty true }}
-          prune: {{ or .config.prune true }}
-          selfHeal: {{ or .config.selfHeal true }}
+          prune:      {{ or .config.prune      true }}
+          selfHeal:   {{ or .config.selfHeal   true }}
         syncOptions:
         - CreateNamespace=true
         - ServerSideApply=true
       sources:
+        # 1) Git sources for your repo
         - repoURL: "https://github.com/mrmm/home-ops-talos.git"
           targetRevision: main
           ref: repo
         - repoURL: "https://github.com/mrmm/home-ops-talos.git"
           path: "{{ .path.path }}"
           targetRevision: main
-        - repoURL: "https://github.com/mrmm/home-ops-talos.git"
-          targetRevision: main
-          path: "{{ .path.path }}"
+
+        # 2) Helm chart sources, one entry per item in .helm.charts
+        {{- range .helm.charts }}
+        - repoURL:       "{{ .repoURL }}"
+          chart:         "{{ .chart }}"
+          targetRevision: "{{ .targetRevision }}"
           helm:
-            releaseName: "{{ index .path.segments 3 }}"
-            {{- with (and .helm .helm.valuesFiles) }}
+            releaseName: "{{ index $.path.segments 3 }}"
+            # Compute valuesFiles: use provided list or default to ["values.yaml"]
+            {{- $vals := or .valuesFiles (slice "values.yaml") }}
+            {{- if gt (len $vals) 0 }}
             valueFiles:
-            {{- range . }}
+              {{- range $vals }}
               - $repo/{{ $.path.path }}/{{ . }}
+              {{- end }}
             {{- end }}
-            {{- end }}
+        {{- end }}
 ---

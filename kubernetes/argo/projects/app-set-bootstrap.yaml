@@ -49,8 +49,10 @@ spec:
           path: "{{ .path.path }}"
           helm:
             releaseName: "{{ index .path.segments 3 }}"
+            {{- with (and .helm .helm.valuesFiles) }}
             valueFiles:
-              {{ rang .valuesFiles }}
-              - $repo/{{ .path.path }}/{{ . }}
-              {{ end }}
+            {{- range . }}
+              - $repo/{{ $.path.path }}/{{ . }}
+            {{- end }}
+            {{- end }
 ---

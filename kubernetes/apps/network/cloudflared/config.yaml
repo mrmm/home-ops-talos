@@ -7,7 +7,3 @@ helm:
       targetRevision: 3.7.3
       valuesFiles:
       - values.yaml
-config:
-  prune: true
-  selfHeal: true
-  allowEmpty: true

@@ -44,16 +44,18 @@
     },
     "config": {
       "type": "object",
-      "required": ["prune", "selfHeal", "allowEmpty"],
       "properties": {
         "prune": {
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "selfHeal": {
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "allowEmpty": {
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         }
       },
       "additionalProperties": false
